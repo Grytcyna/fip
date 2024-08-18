@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.grytsyna.fixitpro.entity.Order
 import com.grytsyna.fixitpro.R
+import com.grytsyna.fixitpro.common.Constants.DATE_FORMATTER
 import com.grytsyna.fixitpro.common.Constants.EXTRA_IMPORT_RESULT
 import com.grytsyna.fixitpro.common.Constants.REQUEST_CODE_CREATE_FILE
 import com.grytsyna.fixitpro.common.Constants.REQUEST_CODE_OPEN_FILE
@@ -85,7 +86,7 @@ class ExportImportActivity : AppCompatActivity() {
                     writer.write(getString(R.string.export_fields_names))
                     for (order in orders) {
                         writer.write(
-                            "${order.id},${order.status},${order.date.time},${order.receivedDate.time}," +
+                            "${order.id},${order.status},${order.date.time},${DATE_FORMATTER.format(order.date)},${order.receivedDate.time}," +
                                     "${order.note},${order.masterTime},${order.address},${order.tel}," +
                                     "${order.surplus},${order.comment},${order.serviceFee},${order.partsFee}\n"
                         )
@@ -116,20 +117,20 @@ class ExportImportActivity : AppCompatActivity() {
                 inputStream.bufferedReader().useLines { lines ->
                     lines.drop(1).forEach { line ->
                         val tokens = line.split(",")
-                        if (tokens.size >= 12) {
+                        if (tokens.size >= 13) {
                             val order = Order.Builder()
                                 .id(tokens[0].toInt())
                                 .status(Status.fromName(tokens[1]))
                                 .date(Date(tokens[2].toLong()))
-                                .receivedDate(Date(tokens[3].toLong()))
-                                .note(tokens[4])
-                                .masterTime(tokens[5])
-                                .address(tokens[6])
-                                .tel(tokens[7])
-                                .surplus(tokens[8])
-                                .comment(tokens[9])
-                                .serviceFee(tokens[10].toDoubleOrNull() ?: 0.0)
-                                .partsFee(tokens[11].toDoubleOrNull() ?: 0.0)
+                                .receivedDate(Date(tokens[4].toLong()))
+                                .note(tokens[5])
+                                .masterTime(tokens[6])
+                                .address(tokens[7])
+                                .tel(tokens[8])
+                                .surplus(tokens[9])
+                                .comment(tokens[10])
+                                .serviceFee(tokens[11].toDoubleOrNull() ?: 0.0)
+                                .partsFee(tokens[12].toDoubleOrNull() ?: 0.0)
                                 .build()
                             orders.add(order)
                         }

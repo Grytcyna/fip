@@ -73,7 +73,7 @@
 
     <string name="export_file_type">text/csv</string>
     <string name="export_file_name">export.csv</string>
-    <string name="export_fields_names">ID,Status,Date,Received Date,Note,Master Time,Address,Tel,Surplus,Comment,Service Fee,Parts Fee\n</string>
+    <string name="export_fields_names">ID,Status,Date,Human Date,Received Date,Note,Master Time,Address,Tel,Surplus,Comment,Service Fee,Parts Fee\n</string>
     <string name="export_successfully_message">Data exported successfully</string>
     <string name="export_error_message">Error exporting data: %1$s</string>
     <string name="import_file_type">*/*</string>

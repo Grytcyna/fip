@@ -152,7 +152,7 @@ class DatabaseHelper private constructor(context: Context) :
         var cursor: Cursor? = null
         return try {
             val db = readableDatabase
-            cursor = db.query(TABLE_ORDERS, null, null, null, null, null, null)
+            cursor = db.query(TABLE_ORDERS, null, null, null, null, null, "$COLUMN_DATE DESC")
             if (cursor.moveToFirst()) {
                 do {
                     val order = Order.Builder()
