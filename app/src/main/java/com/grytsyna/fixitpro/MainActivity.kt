@@ -181,7 +181,6 @@ class MainActivity : AppCompatActivity() {
                 fromDate = getStartDateOrToday(etFromDate)
                 toDate = getEndDateOrToday(etToDate)
                 viewModel.setDates(fromDate, toDate)
-                viewModel.loadOrdersFromDatabase()
                 filterOrders()
             }
 
