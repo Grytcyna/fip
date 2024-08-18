@@ -165,8 +165,11 @@
             <EditText
                 android:id="@+id/etSurplus"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:inputType="text" />
+                android:layout_height="wrap_content"
+                android:minLines="1"
+                android:maxLines="5"
+                android:scrollbars="vertical"
+                android:inputType="textMultiLine" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout

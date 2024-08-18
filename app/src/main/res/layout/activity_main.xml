@@ -30,32 +30,31 @@
 
             <Spinner
                 android:id="@+id/spinnerFilter"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="4dp"
                 android:entries="@array/date_filter_options" />
 
             <EditText
                 android:id="@+id/etFromDate"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="4dp"
                 android:hint="@string/from_hint"
                 android:inputType="date"
+                android:textSize="14sp"
                 android:clickable="true"
                 android:focusable="false"
                 android:enabled="true" />
 
             <EditText
                 android:id="@+id/etToDate"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="4dp"
                 android:hint="@string/to_hint"
                 android:inputType="date"
+                android:textSize="14sp"
                 android:clickable="true"
                 android:focusable="false"
                 android:enabled="true" />
