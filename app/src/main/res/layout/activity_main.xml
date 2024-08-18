@@ -1,0 +1,147 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_main_background"
+    tools:context=".MainActivity" >
+
+    <Button
+        android:id="@+id/btnForward"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:backgroundTint="@color/navigate_color"
+        android:text="@string/navigation_right" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/btnForward"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <Spinner
+                android:id="@+id/spinnerFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:entries="@array/date_filter_options" />
+
+            <EditText
+                android:id="@+id/etFromDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:hint="@string/from_hint"
+                android:inputType="date"
+                android:clickable="true"
+                android:focusable="false"
+                android:enabled="true" />
+
+            <EditText
+                android:id="@+id/etToDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:hint="@string/to_hint"
+                android:inputType="date"
+                android:clickable="true"
+                android:focusable="false"
+                android:enabled="true" />
+
+        </LinearLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:tabTextAppearance="@style/TabTextStyle">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tabs_filter_status_new" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_in_process"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tabs_filter_status_in_process" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_completed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tabs_filter_status_completed" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_canceled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tabs_filter_status_canceled" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_deleted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tabs_filter_status_deleted" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <FrameLayout
+            android:id="@+id/ordersContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="16dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewNew"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_default_new"
+                android:visibility="visible" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewInProcess"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_default_in_process"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewCompleted"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_default_completed"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewCanceled"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_default_canceled"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewDeleted"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_default_deleted"
+                android:visibility="gone" />
+        </FrameLayout>
+
+    </LinearLayout>
+</RelativeLayout>

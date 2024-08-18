@@ -1,3 +1,92 @@
 <resources>
     <string name="app_name">FixIt Pro</string>
+
+    <string-array name="order_status_array">
+        <item>NEW</item>
+        <item>IN_PROCESS</item>
+        <item>COMPLETED</item>
+        <item>CANCELED</item>
+        <item>DELETED</item>
+    </string-array>
+
+    <string-array name="date_filter_options">
+        <item>Today</item>
+        <item>Tomorrow</item>
+        <item>This Week</item>
+        <item>This Month</item>
+        <item>Manually</item>
+    </string-array>
+
+    <string name="date_format">%1$02d/%2$02d/%3$04d</string>
+    <string name="order_text_format">%1$s %2$s</string>
+    <string name="google_maps">com.google.android.apps.maps</string>
+    <string name="order_date_format">MMMM dd, yyyy</string>
+
+    <string name="order_id_hint">Order ID</string>
+    <string name="order_date_hint">Order Date</string>
+    <string name="note_hint">Note</string>
+    <string name="master_time_hint">Master Time</string>
+    <string name="address_hint">Address</string>
+    <string name="tel_hint">Tel</string>
+    <string name="surplus_hint">Surplus</string>
+    <string name="comment_hint">Comment</string>
+    <string name="search_hint">Search</string>
+    <string name="from_hint">From</string>
+    <string name="to_hint">To</string>
+    <string name="service_fee">Service Fee</string>
+    <string name="parts_fee">Parts Fee</string>
+
+    <string name="edit_button_text">Edit</string>
+    <string name="save_button_text">Save</string>
+    <string name="yes_button_text">Yes</string>
+    <string name="no_button_text">No</string>
+    <string name="delete_button_text">Delete</string>
+    <string name="cancel_button_text">Cancel</string>
+    <string name="search_button_text">Search</string>
+    <string name="import_button_text">Import</string>
+    <string name="export_button_text">Export</string>
+    <string name="show_orders_button_text">Show</string>
+
+    <string name="open_map_description">Open Map</string>
+    <string name="call_description">Call</string>
+
+    <string name="tabs_filter_status_new">New</string>
+    <string name="tabs_filter_status_in_process">In Process</string>
+    <string name="tabs_filter_status_completed">Completed</string>
+    <string name="tabs_filter_status_canceled">Canceled</string>
+    <string name="tabs_filter_status_deleted">Deleted</string>
+
+    <string name="navigation_right"> \u003E\u003E\u003E </string>
+    <string name="navigation_left"> \u003C\u003C\u003C </string>
+
+    <string name="comment_report">Comment: %1$s</string>
+    <string name="service_fee_report">Service Fee: %1$s</string>
+    <string name="parts_fee_report">Parts Fee: %1$s</string>
+    <string name="note_surplus_report">Note: %1$s Surplus: %2$s</string>
+    <string name="label_summary_service_fee_report">Summary Service Fee: %1$s</string>
+    <string name="label_summary_parts_fee_report">Summary Parts Fee: %1$s</string>
+    <string name="label_total_report">Total: %1$s</string>
+
+    <string name="complete_dialog_message_text">Before moving the Order to complete, fill in the following fields.</string>
+    <string name="attention_message_text">Attention</string>
+    <string name="attention_dialog_message_text">All current data will be replaced. Are you sure you want to continue?</string>
+
+    <string name="export_file_type">text/csv</string>
+    <string name="export_file_name">export.csv</string>
+    <string name="export_fields_names">ID,Status,Date,Received Date,Note,Master Time,Address,Tel,Surplus,Comment,Service Fee,Parts Fee\n</string>
+    <string name="export_successfully_message">Data exported successfully</string>
+    <string name="export_error_message">Error exporting data: %1$s</string>
+    <string name="import_file_type">*/*</string>
+    <string name="import_successfully_message">Data imported successfully</string>
+    <string name="import_error_message">Data import error: %1$s</string>
+
+    <string name="phone_handle_request_text">No application can handle this request. Please install a phone application.</string>
+    <string name="number_is_empty_text">Phone number is empty</string>
+    <string name="address_handle_request_text">No application can handle this request. Please install a map application.</string>
+    <string name="address_is_empty_text">Address is empty</string>
+    <string name="dates_select_two_text">Please select both dates</string>
+    <string name="comment_required_text">Comment is required</string>
+    <string name="permissions_not_granted_text">Permissions not granted</string>
+    <string name="no_results_found_text">No results found</string>
+
 </resources>

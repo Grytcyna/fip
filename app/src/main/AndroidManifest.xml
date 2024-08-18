@@ -2,7 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+
+    <uses-feature android:name="android.hardware.telephony" android:required="false"/>
+
     <application
+        android:name=".receiver.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -10,19 +17,60 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FixItPro"
-        tools:targetApi="31">
+        android:theme="@style/Theme.FixItPro">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.FixItPro">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity.edit.EditOrderActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".activity.report.ReportActivity"
+            android:exported="true"
+            android:theme="@style/Theme.FixItPro">
+        </activity>
+
+        <activity
+            android:name=".activity.export_import.ExportImportActivity"
+            android:exported="true"
+            android:theme="@style/Theme.FixItPro">
+        </activity>
+
+        <activity
+            android:name=".activity.search.SearchActivity"
+            android:exported="true"
+            android:theme="@style/Theme.FixItPro">
+        </activity>
+
+        <receiver
+            android:name=".receiver.SmsReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <data android:scheme="geo" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <data android:scheme="tel" />
+        </intent>
+    </queries>
 
 </manifest>

@@ -7,4 +7,20 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="grey">#E6E6E6</color>
+
+    <color name="color_main_background">#F5F5F5</color>
+    <color name="color_default_new">#ECECEC</color>
+    <color name="color_default_in_process">#E0F2FF</color>
+    <color name="color_default_completed">#D9FFD7</color>
+    <color name="color_default_canceled">#F1E3F1</color>
+    <color name="color_default_deleted">#FFCCCC</color>
+
+    <color name="navigate_color">#DEF0FF</color>
+
+    <color name="import_color">#F29F98</color>
+    <color name="export_color">#B5D5E4</color>
+    <color name="show_orders_color">#C2E9C0</color>
+
+    <color name="text_field_background">#FCFFFF</color>
 </resources>
