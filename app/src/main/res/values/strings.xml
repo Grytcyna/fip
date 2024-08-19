@@ -33,8 +33,8 @@
     <string name="search_hint">Search</string>
     <string name="from_hint">From</string>
     <string name="to_hint">To</string>
-    <string name="service_fee">Service Fee</string>
-    <string name="parts_fee">Parts Fee</string>
+    <string name="service_fee_hint">Service Fee</string>
+    <string name="parts_fee_hint">Parts Fee</string>
 
     <string name="edit_button_text">Edit</string>
     <string name="save_button_text">Save</string>
@@ -84,15 +84,15 @@
     <string name="permissions_not_granted_text">Permissions not granted</string>
     <string name="no_results_found_text">No results found</string>
 
-    <string name="toast_empty_dates">Please select both dates</string>
-    <string name="toast_phone_handle_request">No application can handle this request. Please install a phone application.</string>
-    <string name="toast_phone_number_empty">Phone number is empty</string>
-    <string name="toast_copied_to_clipboard">Copied to clipboard</string>
-    <string name="toast_address_empty">Address is empty</string>
-    <string name="toast_map_handle_request">No application can handle this request. Please install a map application.</string>
-    <string name="toast_export_successfully">Data exported successfully</string>
-    <string name="toast_export_error">Error exporting data: %1$s</string>
-    <string name="toast_import_successfully">Data imported successfully</string>
-    <string name="toast_import_error">Data import error: %1$s</string>
+    <string name="empty_dates_toast">Please select both dates</string>
+    <string name="phone_handle_request_toast">No application can handle this request. Please install a phone application.</string>
+    <string name="phone_number_empty_toast">Phone number is empty</string>
+    <string name="copied_to_clipboard_toast">Copied to clipboard</string>
+    <string name="address_empty_toast">Address is empty</string>
+    <string name="map_handle_request_toast">No application can handle this request. Please install a map application.</string>
+    <string name="export_successfully_toast">Data exported successfully</string>
+    <string name="export_error_toast">Error exporting data: %1$s</string>
+    <string name="import_successfully_toast">Data imported successfully</string>
+    <string name="import_error_toast">Data import error: %1$s</string>
 
 </resources>

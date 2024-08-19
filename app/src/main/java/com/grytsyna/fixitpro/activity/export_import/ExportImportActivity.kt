@@ -94,9 +94,9 @@ class ExportImportActivity : AppCompatActivity() {
                     writer.flush()
                 }
             }
-            Toast.makeText(this, getString(R.string.toast_export_successfully), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.export_successfully_toast), Toast.LENGTH_SHORT).show()
         } catch (e: IOException) {
-            Toast.makeText(this, getString(R.string.toast_export_error, e.message), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.export_error_toast, e.message), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -139,12 +139,12 @@ class ExportImportActivity : AppCompatActivity() {
                 }
             }
             databaseHelper.replaceAllOrders(orders)
-            Toast.makeText(this, getString(R.string.toast_import_successfully), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.import_successfully_toast), Toast.LENGTH_SHORT).show()
             Intent().putExtra(EXTRA_IMPORT_RESULT, true)
             setResult(RESULT_OK, Intent().putExtra(EXTRA_IMPORT_RESULT, true))
             finish()
         } catch (e: IOException) {
-            Toast.makeText(this, getString(R.string.toast_import_error, e.message), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.import_error_toast, e.message), Toast.LENGTH_LONG).show()
         }
     }
 }

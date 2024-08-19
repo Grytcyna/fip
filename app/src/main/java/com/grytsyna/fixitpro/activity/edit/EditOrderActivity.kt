@@ -74,10 +74,10 @@ class EditOrderActivity : AppCompatActivity() {
                 if (intent.resolveActivity(packageManager) != null) {
                     startActivity(intent)
                 } else {
-                    Toast.makeText(this, getString(R.string.toast_phone_handle_request), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.phone_handle_request_toast), Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(this, getString(R.string.toast_phone_number_empty), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.phone_number_empty_toast), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -110,7 +110,7 @@ class EditOrderActivity : AppCompatActivity() {
                 val clip = ClipData.newPlainText(getString(R.string.order_id_hint), orderId)
                 clipboard.setPrimaryClip(clip)
 
-                Toast.makeText(this, getString(R.string.toast_copied_to_clipboard), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.copied_to_clipboard_toast), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -121,7 +121,7 @@ class EditOrderActivity : AppCompatActivity() {
                 val clip = ClipData.newPlainText(getString(R.string.address_hint), address)
                 clipboard.setPrimaryClip(clip)
 
-                Toast.makeText(this, getString(R.string.toast_copied_to_clipboard), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.copied_to_clipboard_toast), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -132,7 +132,7 @@ class EditOrderActivity : AppCompatActivity() {
                 val clip = ClipData.newPlainText(getString(R.string.tel_hint), tel)
                 clipboard.setPrimaryClip(clip)
 
-                Toast.makeText(this, getString(R.string.toast_copied_to_clipboard), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.copied_to_clipboard_toast), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -178,7 +178,7 @@ class EditOrderActivity : AppCompatActivity() {
 
     private fun openGoogleMaps(address: String?) {
         if (address.isNullOrEmpty()) {
-            Toast.makeText(this, getString(R.string.toast_address_empty), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.address_empty_toast), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -188,7 +188,7 @@ class EditOrderActivity : AppCompatActivity() {
         if (mapIntent.resolveActivity(packageManager) != null) {
             startActivity(mapIntent)
         } else {
-            Toast.makeText(this, getString(R.string.toast_map_handle_request), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.map_handle_request_toast), Toast.LENGTH_SHORT).show()
         }
     }
 

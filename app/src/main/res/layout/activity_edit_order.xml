@@ -206,7 +206,7 @@
             style="@style/CustomTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/service_fee"
+            android:hint="@string/service_fee_hint"
             android:paddingTop="8dp">
 
             <EditText
@@ -220,7 +220,7 @@
             style="@style/CustomTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/parts_fee"
+            android:hint="@string/parts_fee_hint"
             android:paddingTop="8dp">
 
             <EditText

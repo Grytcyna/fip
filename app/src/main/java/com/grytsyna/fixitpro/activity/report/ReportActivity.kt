@@ -105,7 +105,7 @@ class ReportActivity : AppCompatActivity() {
         val toDateStr = etToDate.text.toString()
 
         if (fromDateStr.isEmpty() || toDateStr.isEmpty()) {
-            Toast.makeText(this, getString(R.string.toast_empty_dates), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.empty_dates_toast), Toast.LENGTH_SHORT).show()
             return
         }
 

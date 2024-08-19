@@ -47,7 +47,7 @@
                 android:id="@+id/editServiceFee"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/service_fee"
+                android:hint="@string/service_fee_hint"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,7 +60,7 @@
                 android:id="@+id/editPartsFee"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/parts_fee"
+                android:hint="@string/parts_fee_hint"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
