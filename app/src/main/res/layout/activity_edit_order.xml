@@ -1,4 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_main_background"
@@ -19,11 +20,16 @@
             android:paddingBottom="8dp" />
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutOrderId"
             style="@style/CustomTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/order_id_hint"
-            android:paddingTop="8dp">
+            android:paddingTop="8dp"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_copy"
+            app:endIconContentDescription="@string/order_id_description"
+            android:layout_marginBottom="8dp" >
 
             <EditText
                 android:id="@+id/etOrderId"
@@ -87,12 +93,17 @@
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutAddress"
                 style="@style/CustomTextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="@string/address_hint"
-                android:paddingTop="8dp">
+                android:paddingTop="8dp"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_copy"
+                app:endIconContentDescription="@string/address_description"
+                android:layout_marginBottom="8dp" >
 
                 <EditText
                     android:id="@+id/etAddress"
@@ -126,12 +137,17 @@
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutTel"
                 style="@style/CustomTextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="@string/tel_hint"
-                android:paddingTop="8dp">
+                android:paddingTop="8dp"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_copy"
+                app:endIconContentDescription="@string/tel_description"
+                android:layout_marginBottom="8dp" >
 
                 <EditText
                     android:id="@+id/etTel"

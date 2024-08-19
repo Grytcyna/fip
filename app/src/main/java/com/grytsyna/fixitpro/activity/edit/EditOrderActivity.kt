@@ -1,6 +1,9 @@
 package com.grytsyna.fixitpro.activity.edit
 
 import android.app.DatePickerDialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -71,15 +74,10 @@ class EditOrderActivity : AppCompatActivity() {
                 if (intent.resolveActivity(packageManager) != null) {
                     startActivity(intent)
                 } else {
-                    Toast.makeText(
-                        this,
-                        getString(R.string.phone_handle_request_text),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this, getString(R.string.toast_phone_handle_request), Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(this, getString(R.string.number_is_empty_text), Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, getString(R.string.toast_phone_number_empty), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -102,6 +100,39 @@ class EditOrderActivity : AppCompatActivity() {
                 onBackPressedDispatcher.onBackPressed()
             } else {
                 enableEditing(true)
+            }
+        }
+
+        binding.textInputLayoutOrderId.setEndIconOnClickListener {
+            val orderId = binding.etOrderId.text.toString()
+            if (orderId.isNotEmpty()) {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText(getString(R.string.order_id_hint), orderId)
+                clipboard.setPrimaryClip(clip)
+
+                Toast.makeText(this, getString(R.string.toast_copied_to_clipboard), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.textInputLayoutAddress.setEndIconOnClickListener {
+            val address = binding.etAddress.text.toString()
+            if (address.isNotEmpty()) {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText(getString(R.string.address_hint), address)
+                clipboard.setPrimaryClip(clip)
+
+                Toast.makeText(this, getString(R.string.toast_copied_to_clipboard), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.textInputLayoutTel.setEndIconOnClickListener {
+            val tel = binding.etTel.text.toString()
+            if (tel.isNotEmpty()) {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText(getString(R.string.tel_hint), tel)
+                clipboard.setPrimaryClip(clip)
+
+                Toast.makeText(this, getString(R.string.toast_copied_to_clipboard), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -147,7 +178,7 @@ class EditOrderActivity : AppCompatActivity() {
 
     private fun openGoogleMaps(address: String?) {
         if (address.isNullOrEmpty()) {
-            Toast.makeText(this, getString(R.string.address_is_empty_text), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_address_empty), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -157,7 +188,7 @@ class EditOrderActivity : AppCompatActivity() {
         if (mapIntent.resolveActivity(packageManager) != null) {
             startActivity(mapIntent)
         } else {
-            Toast.makeText(this, getString(R.string.address_handle_request_text), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_map_handle_request), Toast.LENGTH_SHORT).show()
         }
     }
 

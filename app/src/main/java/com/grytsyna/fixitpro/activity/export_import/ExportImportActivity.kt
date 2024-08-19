@@ -94,9 +94,9 @@ class ExportImportActivity : AppCompatActivity() {
                     writer.flush()
                 }
             }
-            Toast.makeText(this, getString(R.string.export_successfully_message), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_export_successfully), Toast.LENGTH_SHORT).show()
         } catch (e: IOException) {
-            Toast.makeText(this, getString(R.string.export_error_message, e.message), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.toast_export_error, e.message), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -122,6 +122,7 @@ class ExportImportActivity : AppCompatActivity() {
                                 .id(tokens[0].toInt())
                                 .status(Status.fromName(tokens[1]))
                                 .date(Date(tokens[2].toLong()))
+                                //tokens[3] skipped, contains date human format
                                 .receivedDate(Date(tokens[4].toLong()))
                                 .note(tokens[5])
                                 .masterTime(tokens[6])
@@ -138,12 +139,12 @@ class ExportImportActivity : AppCompatActivity() {
                 }
             }
             databaseHelper.replaceAllOrders(orders)
-            Toast.makeText(this, getString(R.string.import_successfully_message), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_import_successfully), Toast.LENGTH_SHORT).show()
             Intent().putExtra(EXTRA_IMPORT_RESULT, true)
             setResult(RESULT_OK, Intent().putExtra(EXTRA_IMPORT_RESULT, true))
             finish()
         } catch (e: IOException) {
-            Toast.makeText(this, getString(R.string.import_error_message, e.message), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.toast_import_error, e.message), Toast.LENGTH_LONG).show()
         }
     }
 }
