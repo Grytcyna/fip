@@ -1,10 +1,14 @@
 package com.grytsyna.fixitpro.activity.report
 
 import android.app.DatePickerDialog
+import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,8 +17,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.grytsyna.fixitpro.common.Constants.DATE_FORMATTER
 import com.grytsyna.fixitpro.activity.export_import.ExportImportActivity
 import com.grytsyna.fixitpro.R
+import com.grytsyna.fixitpro.common.Constants.EMPTY
 import com.grytsyna.fixitpro.common.Constants.EXTRA_IMPORT_RESULT
 import com.grytsyna.fixitpro.common.Constants.REQUEST_CODE_IMPORT_DATA
+import com.grytsyna.fixitpro.common.DateUtils
 import com.grytsyna.fixitpro.db.DatabaseHelper
 import com.grytsyna.fixitpro.enum_status.Status
 import java.util.Calendar
@@ -27,6 +33,10 @@ class ReportActivity : AppCompatActivity() {
     private lateinit var tvSummaryServiceFee: TextView
     private lateinit var tvSummaryPartsFee: TextView
     private lateinit var tvTotal: TextView
+    private lateinit var btnOpenCalculator: ImageButton
+    private lateinit var btnCopyServiceFee: ImageButton
+    private lateinit var btnCopyPartsFee: ImageButton
+    private lateinit var btnCopyTotal: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +47,10 @@ class ReportActivity : AppCompatActivity() {
         tvSummaryServiceFee = findViewById(R.id.tvSummaryServiceFee)
         tvSummaryPartsFee = findViewById(R.id.tvSummaryPartsFee)
         tvTotal = findViewById(R.id.tvTotal)
+        btnOpenCalculator = findViewById(R.id.btnOpenCalculator)
+        btnCopyServiceFee = findViewById(R.id.btnCopyServiceFee)
+        btnCopyPartsFee = findViewById(R.id.btnCopyPartsFee)
+        btnCopyTotal = findViewById(R.id.btnCopyTotal)
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -68,6 +82,22 @@ class ReportActivity : AppCompatActivity() {
 
         btnShowOrders.setOnClickListener {
             showOrders()
+        }
+
+        btnCopyServiceFee.setOnClickListener {
+            copyToClipboard(tvSummaryServiceFee)
+        }
+
+        btnCopyPartsFee.setOnClickListener {
+            copyToClipboard(tvSummaryPartsFee)
+        }
+
+        btnCopyTotal.setOnClickListener {
+            copyToClipboard(tvTotal)
+        }
+
+        btnOpenCalculator.setOnClickListener {
+            openCalculator()
         }
     }
 
@@ -101,30 +131,45 @@ class ReportActivity : AppCompatActivity() {
     }
 
     private fun showOrders() {
-        val fromDateStr = etFromDate.text.toString()
-        val toDateStr = etToDate.text.toString()
-
-        if (fromDateStr.isEmpty() || toDateStr.isEmpty()) {
+        if (etFromDate.text.isEmpty() || etToDate.text.isEmpty()) {
             Toast.makeText(this, getString(R.string.empty_dates_toast), Toast.LENGTH_SHORT).show()
             return
         }
 
-        val fromDate = DATE_FORMATTER.parse(fromDateStr)
-        val toDate = DATE_FORMATTER.parse(toDateStr)
+        val fromDate = DateUtils.getStartDateOrToday(etFromDate)
+        val toDate = DateUtils.getEndDateOrToday(etToDate)
 
-        if (fromDate != null && toDate != null) {
-            val orders = DatabaseHelper.getInstance(this).getRangeOrders(fromDate, toDate, Status.COMPLETED)
+        val orders = DatabaseHelper.getInstance(this).getRangeOrders(fromDate, toDate, Status.COMPLETED)
 
-            val adapter = OrderAdapterReport(orders)
-            recyclerView.adapter = adapter
+        val adapter = OrderAdapterReport(orders)
+        recyclerView.adapter = adapter
 
-            val totalServiceFee = orders.sumOf { it.serviceFee }
-            val totalPartsFee = orders.sumOf { it.partsFee }
-            val total = totalServiceFee + totalPartsFee
+        val totalServiceFee = orders.sumOf { it.serviceFee }
+        val totalPartsFee = orders.sumOf { it.partsFee }
+        val total = totalServiceFee + totalPartsFee
 
-            tvSummaryServiceFee.text = getString(R.string.label_summary_service_fee_report, totalServiceFee.toString())
-            tvSummaryPartsFee.text = getString(R.string.label_summary_parts_fee_report, totalPartsFee.toString())
-            tvTotal.text = getString(R.string.label_total_report, total.toString())
+        tvSummaryServiceFee.text = getString(R.string.label_summary_service_fee_report, totalServiceFee.toString())
+        tvSummaryPartsFee.text = getString(R.string.label_summary_parts_fee_report, totalPartsFee.toString())
+        tvTotal.text = getString(R.string.label_total_report, total.toString())
+    }
+
+    private fun copyToClipboard(textView: TextView) {
+        val text = textView.text.toString().replace("[^\\d.]".toRegex(), EMPTY)
+        if (text.isNotEmpty()) {
+            val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText(EMPTY, text)
+            clipboard.setPrimaryClip(clip)
+            Toast.makeText(this, getString(R.string.copied_to_clipboard_toast), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun openCalculator() {
+        try {
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.addCategory(Intent.CATEGORY_APP_CALCULATOR)
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(this, getString(R.string.calculator_not_found_toast), Toast.LENGTH_SHORT).show()
         }
     }
 }

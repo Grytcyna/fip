@@ -53,6 +53,10 @@
     <string name="address_description">Copy Address</string>
     <string name="tel_description">Copy Phone Number</string>
     <string name="search_description">Clear Search</string>
+    <string name="open_calculator_description">Open Calculator</string>
+    <string name="service_fee_description">Copy Service Fee</string>
+    <string name="parts_fee_description">Copy Parts Fee</string>
+    <string name="total_description">Copy Total</string>
 
     <string name="tabs_filter_status_new">New</string>
     <string name="tabs_filter_status_in_process">In Process</string>
@@ -94,5 +98,6 @@
     <string name="export_error_toast">Error exporting data: %1$s</string>
     <string name="import_successfully_toast">Data imported successfully</string>
     <string name="import_error_toast">Data import error: %1$s</string>
+    <string name="calculator_not_found_toast">Calculator app not found</string>
 
 </resources>

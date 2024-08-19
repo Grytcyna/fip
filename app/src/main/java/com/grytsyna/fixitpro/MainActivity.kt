@@ -20,6 +20,7 @@ import com.grytsyna.fixitpro.activity.main.order.OrderViewModel
 import com.grytsyna.fixitpro.activity.search.SearchActivity
 import com.grytsyna.fixitpro.common.Constants
 import com.grytsyna.fixitpro.common.Constants.DATE_FORMATTER
+import com.grytsyna.fixitpro.common.DateUtils
 import com.grytsyna.fixitpro.common.LogWrapper
 import com.grytsyna.fixitpro.db.DatabaseHelper
 import com.grytsyna.fixitpro.entity.Order
@@ -178,8 +179,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                fromDate = getStartDateOrToday(etFromDate)
-                toDate = getEndDateOrToday(etToDate)
+                fromDate = DateUtils.getStartDateOrToday(etFromDate)
+                toDate = DateUtils.getEndDateOrToday(etToDate)
                 viewModel.setDates(fromDate, toDate)
                 filterOrders()
             }
@@ -191,8 +192,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupDefaultFilters() {
         spinnerFilter.setSelection(1)
         setDatesToTomorrow()
-        fromDate = getStartDateOrToday(etFromDate)
-        toDate = getEndDateOrToday(etToDate)
+        fromDate = DateUtils.getStartDateOrToday(etFromDate)
+        toDate = DateUtils.getEndDateOrToday(etToDate)
         viewModel.setDates(fromDate, toDate)
     }
 
@@ -369,8 +370,8 @@ class MainActivity : AppCompatActivity() {
     private fun filterOrders() {
         val status = tabs.selectedTabPosition
         val selectedStatus = Status.entries[status]
-        fromDate = getStartDateOrToday(etFromDate)
-        toDate = getEndDateOrToday(etToDate)
+        fromDate = DateUtils.getStartDateOrToday(etFromDate)
+        toDate = DateUtils.getEndDateOrToday(etToDate)
         viewModel.setDates(fromDate, toDate)
 
         val filteredOrders = allOrders.filter { order ->
@@ -393,46 +394,13 @@ class MainActivity : AppCompatActivity() {
             { _, year, monthOfYear, dayOfMonth ->
                 val selectedDate = Calendar.getInstance()
                 selectedDate.set(year, monthOfYear, dayOfMonth)
-                editText.setText(Constants.DATE_FORMATTER.format(selectedDate.time))
+                editText.setText(DATE_FORMATTER.format(selectedDate.time))
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         )
         datePickerDialog.show()
-    }
-
-    private fun getStartDateOrToday(editText: EditText): Date {
-        return getDateOrToday(editText, true)
-    }
-
-    private fun getEndDateOrToday(editText: EditText): Date {
-        return getDateOrToday(editText, false)
-    }
-
-    private fun getDateOrToday(editText: EditText, isStartOfDay: Boolean): Date {
-        val dateStr = editText.text.toString()
-        val calendar = Calendar.getInstance().apply {
-            timeInMillis = runCatching {
-                DATE_FORMATTER.parse(dateStr)?.time ?: timeInMillis
-            }.getOrElse {
-                timeInMillis
-            }
-
-            if (isStartOfDay) {
-                set(Calendar.HOUR_OF_DAY, 0)
-                set(Calendar.MINUTE, 0)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 1)
-            } else {
-                set(Calendar.HOUR_OF_DAY, 23)
-                set(Calendar.MINUTE, 59)
-                set(Calendar.SECOND, 59)
-                set(Calendar.MILLISECOND, 999)
-            }
-        }
-
-        return calendar.time
     }
 
     private fun enableDateInputs() {

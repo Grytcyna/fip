@@ -3,10 +3,10 @@ package com.grytsyna.fixitpro.activity.edit
 import android.app.DatePickerDialog
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.grytsyna.fixitpro.common.Constants.DATE_FORMATTER
@@ -14,6 +14,7 @@ import com.grytsyna.fixitpro.common.LogWrapper
 import com.grytsyna.fixitpro.entity.Order
 import com.grytsyna.fixitpro.R
 import com.grytsyna.fixitpro.activity.main.order.OrderViewModel
+import com.grytsyna.fixitpro.common.Constants.EMPTY
 import com.grytsyna.fixitpro.common.Constants.EXTRA_GEO
 import com.grytsyna.fixitpro.common.Constants.EXTRA_ORDER
 import com.grytsyna.fixitpro.common.Constants.EXTRA_TEL
@@ -104,36 +105,15 @@ class EditOrderActivity : AppCompatActivity() {
         }
 
         binding.textInputLayoutOrderId.setEndIconOnClickListener {
-            val orderId = binding.etOrderId.text.toString()
-            if (orderId.isNotEmpty()) {
-                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText(getString(R.string.order_id_hint), orderId)
-                clipboard.setPrimaryClip(clip)
-
-                Toast.makeText(this, getString(R.string.copied_to_clipboard_toast), Toast.LENGTH_SHORT).show()
-            }
+            copyToClipboard(binding.etOrderId)
         }
 
         binding.textInputLayoutAddress.setEndIconOnClickListener {
-            val address = binding.etAddress.text.toString()
-            if (address.isNotEmpty()) {
-                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText(getString(R.string.address_hint), address)
-                clipboard.setPrimaryClip(clip)
-
-                Toast.makeText(this, getString(R.string.copied_to_clipboard_toast), Toast.LENGTH_SHORT).show()
-            }
+            copyToClipboard(binding.etAddress)
         }
 
         binding.textInputLayoutTel.setEndIconOnClickListener {
-            val tel = binding.etTel.text.toString()
-            if (tel.isNotEmpty()) {
-                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText(getString(R.string.tel_hint), tel)
-                clipboard.setPrimaryClip(clip)
-
-                Toast.makeText(this, getString(R.string.copied_to_clipboard_toast), Toast.LENGTH_SHORT).show()
-            }
+            copyToClipboard(binding.etTel)
         }
 
         binding.btnCancel.setOnClickListener {
@@ -198,6 +178,16 @@ class EditOrderActivity : AppCompatActivity() {
         } catch (e: Exception) {
             LogWrapper.e("DatabaseHelper", "Error parsing date: ${e.message}", e)
             Date()
+        }
+    }
+
+    private fun copyToClipboard(editText: EditText) {
+        val text = editText.text.toString()
+        if (text.isNotEmpty()) {
+            val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText(EMPTY, text)
+            clipboard.setPrimaryClip(clip)
+            Toast.makeText(this, getString(R.string.copied_to_clipboard_toast), Toast.LENGTH_SHORT).show()
         }
     }
 }
