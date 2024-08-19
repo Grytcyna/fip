@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +22,7 @@ class SearchActivity : AppCompatActivity(), OrderAdapter.OnItemClickListener {
 
     private lateinit var searchField: EditText
     private lateinit var btnSearch: Button
+    private lateinit var btnClearSearch: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: OrderAdapter
     private lateinit var dbHelper: DatabaseHelper
@@ -31,6 +33,7 @@ class SearchActivity : AppCompatActivity(), OrderAdapter.OnItemClickListener {
 
         searchField = findViewById(R.id.searchField)
         btnSearch = findViewById(R.id.btnSearch)
+        btnClearSearch = findViewById(R.id.btnClearSearch)
         recyclerView = findViewById(R.id.recyclerView)
         val btnBack: Button = findViewById(R.id.btnBack)
         val btnForward: Button = findViewById(R.id.btnForward)
@@ -45,6 +48,10 @@ class SearchActivity : AppCompatActivity(), OrderAdapter.OnItemClickListener {
             if (query.isNotEmpty()) {
                 searchOrders(query)
             }
+        }
+
+        btnClearSearch.setOnClickListener {
+            searchField.text.clear()
         }
 
         btnBack.setOnClickListener {

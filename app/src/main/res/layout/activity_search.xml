@@ -43,6 +43,14 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
+        <ImageButton
+            android:id="@+id/btnClearSearch"
+            android:layout_width="40dp"
+            android:layout_height="56dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/search_description"
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
         <EditText
             android:id="@+id/searchField"
             android:layout_width="0dp"

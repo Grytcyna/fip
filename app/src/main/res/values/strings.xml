@@ -52,6 +52,7 @@
     <string name="order_id_description">Copy Order ID</string>
     <string name="address_description">Copy Address</string>
     <string name="tel_description">Copy Phone Number</string>
+    <string name="search_description">Clear Search</string>
 
     <string name="tabs_filter_status_new">New</string>
     <string name="tabs_filter_status_in_process">In Process</string>
