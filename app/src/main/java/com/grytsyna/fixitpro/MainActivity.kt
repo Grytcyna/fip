@@ -29,6 +29,10 @@ import com.grytsyna.fixitpro.entity.Order
 import com.grytsyna.fixitpro.enum_status.RangeFilter
 import com.grytsyna.fixitpro.enum_status.Status
 import com.grytsyna.fixitpro.receiver.MyApplication
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.ZoneId
 import java.util.*
 
@@ -54,6 +58,7 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
     private lateinit var permissionManager: PermissionManager
 
     private var allOrders: MutableList<Order> = mutableListOf()
+    private var tempOrders: MutableList<Order> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -153,8 +158,33 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
         btnForward = findViewById(R.id.btnForward)
         spinnerFilter = findViewById(R.id.spinnerFilter)
 
-        etFromDate.setOnClickListener { showDatePickerDialog(etFromDate) }
-        etToDate.setOnClickListener { showDatePickerDialog(etToDate) }
+        etFromDate.setOnClickListener {
+            if (RangeFilter.fromDescription(spinnerFilter.selectedItem.toString()) == RangeFilter.MANUALLY) {
+                showDatePickerDialog(etFromDate) { selectedDate ->
+                    if (!etToDate.text.isNullOrEmpty()) {
+                        val fromDate = DateUtils.getStartDateOrToday(etFromDate)
+                        val toDate = DateUtils.getEndDateOrToday(etToDate)
+                        fetchOrdersForCustomDateRange(fromDate, toDate)
+                    }
+                }
+            } else {
+                showDatePickerDialog(etFromDate)
+            }
+        }
+
+        etToDate.setOnClickListener {
+            if (RangeFilter.fromDescription(spinnerFilter.selectedItem.toString()) == RangeFilter.MANUALLY) {
+                showDatePickerDialog(etToDate) { selectedDate ->
+                    if (!etFromDate.text.isNullOrEmpty()) {
+                        val fromDate = DateUtils.getStartDateOrToday(etFromDate)
+                        val toDate = DateUtils.getEndDateOrToday(etToDate)
+                        fetchOrdersForCustomDateRange(fromDate, toDate)
+                    }
+                }
+            } else {
+                showDatePickerDialog(etToDate)
+            }
+        }
 
         btnForward.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
@@ -206,25 +236,27 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
                     RangeFilter.TODAY -> {
                         setDatesToToday()
                         disableDateInputs()
-                        filterOrders()
+                        restoreOrdersFromTemp()
                     }
                     RangeFilter.TOMORROW -> {
                         setDatesToTomorrow()
                         disableDateInputs()
-                        filterOrders()
+                        restoreOrdersFromTemp()
                     }
                     RangeFilter.WEEK -> {
                         setDatesToThisWeek()
                         disableDateInputs()
-                        filterOrders()
+                        restoreOrdersFromTemp()
                     }
                     RangeFilter.MONTH -> {
                         setDatesToThisMonth()
                         disableDateInputs()
-                        filterOrders()
+                        restoreOrdersFromTemp()
                     }
                     RangeFilter.MANUALLY -> {
+                        saveOrdersToTemp()
                         enableDateInputs()
+                        clearDateFields()
                     }
                 }
 
@@ -232,6 +264,44 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+    }
+
+    private fun restoreOrdersFromTemp() {
+        if (tempOrders.isNotEmpty()) {
+            allOrders.clear()
+            allOrders.addAll(tempOrders)
+            tempOrders.clear()
+            updateOrderLists(allOrders)
+            filterOrders()
+        }
+    }
+
+    private fun saveOrdersToTemp() {
+        if (tempOrders.isEmpty()) {
+            tempOrders.addAll(allOrders)
+            allOrders.clear()
+        }
+    }
+
+    private fun clearDateFields() {
+        etFromDate.text.clear()
+        etToDate.text.clear()
+    }
+
+    private fun fetchOrdersForCustomDateRange(fromDate: Date, toDate: Date) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val orders = databaseHelper.getRangeOrders(fromDate, toDate)
+            withContext(Dispatchers.Main) {
+                tempOrders.clear()
+                tempOrders.addAll(allOrders)
+
+                allOrders.clear()
+                allOrders.addAll(orders)
+
+                updateOrderLists(allOrders)
+                filterOrders()
+            }
         }
     }
 
@@ -455,7 +525,7 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
         }
     }
 
-    private fun showDatePickerDialog(editText: EditText) {
+    private fun showDatePickerDialog(editText: EditText, onDateSelected: ((Date) -> Unit)? = null) {
         val calendar = Calendar.getInstance()
         val datePickerDialog = DatePickerDialog(
             this,
@@ -463,6 +533,8 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
                 val selectedDate = Calendar.getInstance()
                 selectedDate.set(year, monthOfYear, dayOfMonth)
                 editText.setText(DATE_FORMATTER.format(selectedDate.time))
+
+                onDateSelected?.invoke(selectedDate.time)
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
