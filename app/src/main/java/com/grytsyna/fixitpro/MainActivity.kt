@@ -115,6 +115,16 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
                 } else {
                     allOrders.add(updatedOrder)
                 }
+
+                if (tempOrders.isNotEmpty()) {
+                    val tempPosition = tempOrders.indexOfFirst { it.id == updatedOrder.id }
+                    if (tempPosition != -1) {
+                        tempOrders[tempPosition] = updatedOrder
+                    } else {
+                        tempOrders.add(updatedOrder)
+                    }
+                }
+
                 updateOrderLists(allOrders)
                 filterOrders()
             }
