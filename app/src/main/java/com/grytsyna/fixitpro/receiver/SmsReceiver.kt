@@ -11,6 +11,7 @@ import com.grytsyna.fixitpro.enum_status.Status
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Date
 
 class SmsReceiver : BroadcastReceiver() {
@@ -44,7 +45,13 @@ class SmsReceiver : BroadcastReceiver() {
     private fun processOrderInBackground(context: Context, order: Order) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                processOrder(DatabaseHelper.getInstance(context), order)
+                val dbHelper = DatabaseHelper.getInstance(context)
+                processOrder(dbHelper, order)
+
+                withContext(Dispatchers.Main) {
+                    val appContext = context.applicationContext as MyApplication
+                    appContext.mainActivity?.onOrderAdded(order)
+                }
             } catch (t: Throwable) {
                 LogWrapper.e("SmsReceiver: processOrderInBackground", t.message ?: "Unknown error", t)
             }

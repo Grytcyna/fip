@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
         setContentView(R.layout.activity_main)
 
         (application as MyApplication).setOrdersLoadedListener(this)
+        (application as MyApplication).mainActivity = this
 
         setupPermissions()
 
@@ -83,6 +84,7 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
     override fun onDestroy() {
         super.onDestroy()
         (application as MyApplication).removeOrdersLoadedListener()
+        (application as MyApplication).mainActivity = null
     }
 
     override fun onOrdersLoaded(orders: List<Order>) {
@@ -110,6 +112,17 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
                 updateOrderLists(allOrders)
             }
         }
+    }
+
+    override fun onOrderAdded(order: Order) {
+        val position = allOrders.indexOfFirst { it.id == order.id }
+        if (position != -1) {
+            allOrders[position] = order
+        } else {
+            allOrders.add(order)
+        }
+
+        updateOrderLists(allOrders)
     }
 
     private fun setupPermissions() {

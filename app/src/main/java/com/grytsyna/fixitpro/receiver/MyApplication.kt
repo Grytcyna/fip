@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.ContentResolver
 import android.net.Uri
 import android.provider.Telephony
+import com.grytsyna.fixitpro.MainActivity
 import com.grytsyna.fixitpro.activity.main.OnOrdersLoadedListener
 import com.grytsyna.fixitpro.common.LogWrapper
 import com.grytsyna.fixitpro.common.DateUtils
@@ -18,6 +19,8 @@ class MyApplication : Application(), CoroutineScope {
     override val coroutineContext = Dispatchers.Main + job
 
     private var ordersLoadedListener: OnOrdersLoadedListener? = null
+
+    var mainActivity: MainActivity? = null
 
     fun setOrdersLoadedListener(listener: OnOrdersLoadedListener) {
         ordersLoadedListener = listener
