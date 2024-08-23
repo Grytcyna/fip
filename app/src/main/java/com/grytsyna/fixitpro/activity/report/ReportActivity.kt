@@ -18,8 +18,6 @@ import com.grytsyna.fixitpro.common.Constants.DATE_FORMATTER
 import com.grytsyna.fixitpro.activity.export_import.ExportImportActivity
 import com.grytsyna.fixitpro.R
 import com.grytsyna.fixitpro.common.Constants.EMPTY
-import com.grytsyna.fixitpro.common.Constants.EXTRA_IMPORT_RESULT
-import com.grytsyna.fixitpro.common.Constants.REQUEST_CODE_IMPORT_DATA
 import com.grytsyna.fixitpro.common.DateUtils
 import com.grytsyna.fixitpro.db.DatabaseHelper
 import com.grytsyna.fixitpro.enum_status.Status
@@ -68,8 +66,7 @@ class ReportActivity : AppCompatActivity() {
         }
 
         btnForward.setOnClickListener {
-            val intent = Intent(this, ExportImportActivity::class.java)
-            startActivityForResult(intent, REQUEST_CODE_IMPORT_DATA)
+            startActivity(Intent(this, ExportImportActivity::class.java))
         }
 
         etFromDate.setOnClickListener {
@@ -98,19 +95,6 @@ class ReportActivity : AppCompatActivity() {
 
         btnOpenCalculator.setOnClickListener {
             openCalculator()
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_IMPORT_DATA && resultCode == RESULT_OK) {
-            val importResult = data?.getBooleanExtra(EXTRA_IMPORT_RESULT, false) ?: false
-            if (importResult) {
-                val resultIntent = Intent()
-                resultIntent.putExtra(EXTRA_IMPORT_RESULT, true)
-                setResult(RESULT_OK, resultIntent)
-                finish()
-            }
         }
     }
 

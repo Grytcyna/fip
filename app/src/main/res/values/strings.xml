@@ -46,6 +46,7 @@
     <string name="import_button_text">Import</string>
     <string name="export_button_text">Export</string>
     <string name="show_orders_button_text">Show</string>
+    <string name="restart_button_text">Restart</string>
 
     <string name="open_map_description">Open Map</string>
     <string name="call_description">Call</string>
@@ -76,8 +77,10 @@
     <string name="label_total_report">Total: %1$s</string>
 
     <string name="complete_dialog_message_text">Before moving the Order to complete, fill in the following fields.</string>
-    <string name="attention_message_text">Attention</string>
-    <string name="attention_dialog_message_text">All current data will be replaced. Are you sure you want to continue?</string>
+    <string name="attention_message_title">Attention</string>
+    <string name="attention_dialog_message_text">All current data will be replaced and the Application will be restarted. Are you sure you want to continue?</string>
+    <string name="import_success_title">Import Success</string>
+    <string name="import_success_message">The data has been downloaded successfully, click Restart to reboot the application.</string>
 
     <string name="export_file_type">text/csv</string>
     <string name="export_file_name">export.csv</string>
@@ -96,7 +99,6 @@
     <string name="map_handle_request_toast">No application can handle this request. Please install a map application.</string>
     <string name="export_successfully_toast">Data exported successfully</string>
     <string name="export_error_toast">Error exporting data: %1$s</string>
-    <string name="import_successfully_toast">Data imported successfully</string>
     <string name="import_error_toast">Data import error: %1$s</string>
     <string name="calculator_not_found_toast">Calculator app not found</string>
     <string name="order_saving_error_toast">Order saving error</string>

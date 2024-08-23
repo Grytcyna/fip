@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.grytsyna.fixitpro.entity.Order
 import com.grytsyna.fixitpro.R
 import com.grytsyna.fixitpro.common.Constants.DATE_FORMATTER
-import com.grytsyna.fixitpro.common.Constants.EXTRA_IMPORT_RESULT
 import com.grytsyna.fixitpro.common.Constants.REQUEST_CODE_CREATE_FILE
 import com.grytsyna.fixitpro.common.Constants.REQUEST_CODE_OPEN_FILE
 import com.grytsyna.fixitpro.db.DatabaseHelper
@@ -40,7 +39,7 @@ class ExportImportActivity : AppCompatActivity() {
 
         btnImport.setOnClickListener {
             AlertDialog.Builder(this)
-                .setTitle(getString(R.string.attention_message_text))
+                .setTitle(getString(R.string.attention_message_title))
                 .setMessage(getString(R.string.attention_dialog_message_text))
                 .setPositiveButton(getString(R.string.yes_button_text)) { _, _ ->
                     openFilePicker()
@@ -139,12 +138,27 @@ class ExportImportActivity : AppCompatActivity() {
                 }
             }
             databaseHelper.replaceAllOrders(orders)
-            Toast.makeText(this, getString(R.string.import_successfully_toast), Toast.LENGTH_SHORT).show()
-            Intent().putExtra(EXTRA_IMPORT_RESULT, true)
-            setResult(RESULT_OK, Intent().putExtra(EXTRA_IMPORT_RESULT, true))
-            finish()
+
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.import_success_title))
+                .setMessage(getString(R.string.import_success_message))
+                .setPositiveButton(getString(R.string.restart_button_text)) { _, _ ->
+                    restartApp()
+                }
+                .setCancelable(false)
+                .show()
+
         } catch (e: IOException) {
             Toast.makeText(this, getString(R.string.import_error_toast, e.message), Toast.LENGTH_LONG).show()
         }
     }
+
+    private fun restartApp() {
+        val intent = packageManager.getLaunchIntentForPackage(packageName)
+        intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
+        finish()
+        Runtime.getRuntime().exit(0)
+    }
+
 }

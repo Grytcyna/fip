@@ -13,8 +13,6 @@ import com.grytsyna.fixitpro.activity.edit.EditOrderActivity
 import com.grytsyna.fixitpro.activity.main.order.OrderAdapter
 import com.grytsyna.fixitpro.activity.report.ReportActivity
 import com.grytsyna.fixitpro.common.Constants
-import com.grytsyna.fixitpro.common.Constants.EXTRA_IMPORT_RESULT
-import com.grytsyna.fixitpro.common.Constants.REQUEST_CODE_IMPORT_DATA
 import com.grytsyna.fixitpro.db.DatabaseHelper
 import com.grytsyna.fixitpro.entity.Order
 
@@ -59,27 +57,13 @@ class SearchActivity : AppCompatActivity(), OrderAdapter.OnItemClickListener {
         }
 
         btnForward.setOnClickListener {
-            val intent = Intent(this, ReportActivity::class.java)
-            startActivityForResult(intent, REQUEST_CODE_IMPORT_DATA)
+            startActivity(Intent(this, ReportActivity::class.java))
         }
     }
 
     private fun searchOrders(query: String) {
         val orders = dbHelper.searchOrders(query)
         adapter.submitList(orders)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_IMPORT_DATA && resultCode == RESULT_OK) {
-            val importResult = data?.getBooleanExtra(EXTRA_IMPORT_RESULT, false) ?: false
-            if (importResult) {
-                val resultIntent = Intent()
-                resultIntent.putExtra(EXTRA_IMPORT_RESULT, true)
-                setResult(RESULT_OK, resultIntent)
-                finish()
-            }
-        }
     }
 
     override fun onItemClick(order: Order) {

@@ -210,8 +210,7 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
         }
 
         btnForward.setOnClickListener {
-            val intent = Intent(this, SearchActivity::class.java)
-            startActivityForResult(intent, Constants.REQUEST_CODE_IMPORT_DATA)
+            startActivity(Intent(this, SearchActivity::class.java))
         }
     }
 
@@ -635,7 +634,7 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
 
     private fun editOrder(order: Order) {
         val intent = Intent(this, EditOrderActivity::class.java)
-        intent.putExtra(Constants.EXTRA_ORDER, order)
+        intent.putExtra(EXTRA_ORDER, order)
         startActivityForResult(intent, Constants.REQUEST_CODE_EDIT_ORDER)
     }
 }

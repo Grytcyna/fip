@@ -27,7 +27,6 @@ object Constants {
 
     const val REQUEST_CODE_CREATE_FILE = 1
     const val REQUEST_CODE_OPEN_FILE = 2
-    const val REQUEST_CODE_IMPORT_DATA = 3
     const val REQUEST_CODE_PERMISSIONS = 101
     const val REQUEST_CODE_EDIT_ORDER = 1001
 
@@ -35,5 +34,4 @@ object Constants {
     const val EXTRA_GEO = "geo:0,0?q="
 
     const val EXTRA_ORDER = "order"
-    const val EXTRA_IMPORT_RESULT = "import_result"
 }
