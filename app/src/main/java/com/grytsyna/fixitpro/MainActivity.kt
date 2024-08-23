@@ -136,11 +136,20 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
     }
 
     override fun onOrderAdded(order: Order) {
-        val position = allOrders.indexOfFirst { it.id == order.id }
-        if (position != -1) {
-            allOrders[position] = order
+        val positionInAllOrders = allOrders.indexOfFirst { it.id == order.id }
+        if (positionInAllOrders != -1) {
+            allOrders[positionInAllOrders] = order
         } else {
             allOrders.add(order)
+        }
+
+        if (tempOrders.isNotEmpty()) {
+            val positionInTempOrders = tempOrders.indexOfFirst { it.id == order.id }
+            if (positionInTempOrders != -1) {
+                tempOrders[positionInTempOrders] = order
+            } else {
+                tempOrders.add(order)
+            }
         }
 
         updateOrderLists(allOrders)
