@@ -99,7 +99,11 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
         filterOrders()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         permissionManager.handlePermissionsResult(requestCode, grantResults)
     }
@@ -241,28 +245,37 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
 
     private fun setupFilters() {
         spinnerFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 when (RangeFilter.fromIndex(position)) {
                     RangeFilter.TODAY -> {
                         setDatesToToday()
                         disableDateInputs()
                         restoreOrdersFromTemp()
                     }
+
                     RangeFilter.TOMORROW -> {
                         setDatesToTomorrow()
                         disableDateInputs()
                         restoreOrdersFromTemp()
                     }
+
                     RangeFilter.WEEK -> {
                         setDatesToThisWeek()
                         disableDateInputs()
                         restoreOrdersFromTemp()
                     }
+
                     RangeFilter.MONTH -> {
                         setDatesToThisMonth()
                         disableDateInputs()
                         restoreOrdersFromTemp()
                     }
+
                     RangeFilter.MANUALLY -> {
                         saveOrdersToTemp()
                         enableDateInputs()
@@ -283,7 +296,6 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
             allOrders.addAll(tempOrders)
             tempOrders.clear()
             updateOrderLists(allOrders)
-            filterOrders()
         }
     }
 
@@ -310,7 +322,6 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
                 allOrders.addAll(orders)
 
                 updateOrderLists(allOrders)
-                filterOrders()
             }
         }
     }
@@ -346,8 +357,13 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
     }
 
     private fun setupItemTouchHelper(recyclerView: RecyclerView, adapter: OrderAdapter) {
-        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+        val itemTouchHelperCallback = object :
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
                 return false
             }
 
