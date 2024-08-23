@@ -91,6 +91,7 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
         allOrders.clear()
         allOrders.addAll(orders)
         updateOrderLists(allOrders)
+        filterOrders()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -110,6 +111,7 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
                     allOrders.add(updatedOrder)
                 }
                 updateOrderLists(allOrders)
+                filterOrders()
             }
         }
     }
@@ -123,6 +125,7 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
         }
 
         updateOrderLists(allOrders)
+        filterOrders()
     }
 
     private fun setupPermissions() {
@@ -203,18 +206,22 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
                     RangeFilter.TODAY -> {
                         setDatesToToday()
                         disableDateInputs()
+                        filterOrders()
                     }
                     RangeFilter.TOMORROW -> {
                         setDatesToTomorrow()
                         disableDateInputs()
+                        filterOrders()
                     }
                     RangeFilter.WEEK -> {
                         setDatesToThisWeek()
                         disableDateInputs()
+                        filterOrders()
                     }
                     RangeFilter.MONTH -> {
                         setDatesToThisMonth()
                         disableDateInputs()
+                        filterOrders()
                     }
                     RangeFilter.MANUALLY -> {
                         enableDateInputs()
@@ -314,6 +321,7 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
                         allOrders.add(result)
                     }
                     updateOrderLists(allOrders)
+                    filterOrders()
                 } else {
                     Toast.makeText(this, getString(R.string.order_saving_error_toast), Toast.LENGTH_SHORT).show()
                 }
@@ -361,6 +369,7 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
                                             if (position != -1) {
                                                 allOrders[position] = finalUpdatedOrder
                                                 updateOrderLists(allOrders)
+                                                filterOrders()
                                             }
                                             dialog.dismiss()
                                         } else {
