@@ -488,24 +488,6 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
         return startTime?.let { Constants.TIME_ORDER.indexOf(it) } ?: Int.MAX_VALUE
     }
 
-    private fun updateAdaptersForStatusChange(oldOrder: Order, newOrder: Order) {
-        when (oldOrder.status) {
-            Status.NEW -> adapterNew.submitList(adapterNew.currentList - oldOrder)
-            Status.IN_PROCESS -> adapterInProcess.submitList(adapterInProcess.currentList - oldOrder)
-            Status.COMPLETED -> adapterCompleted.submitList(adapterCompleted.currentList - oldOrder)
-            Status.CANCELED -> adapterCanceled.submitList(adapterCanceled.currentList - oldOrder)
-            Status.DELETED -> adapterDeleted.submitList(adapterDeleted.currentList - oldOrder)
-        }
-
-        when (newOrder.status) {
-            Status.NEW -> adapterNew.submitList(adapterNew.currentList + newOrder)
-            Status.IN_PROCESS -> adapterInProcess.submitList(adapterInProcess.currentList + newOrder)
-            Status.COMPLETED -> adapterCompleted.submitList(adapterCompleted.currentList + newOrder)
-            Status.CANCELED -> adapterCanceled.submitList(adapterCanceled.currentList + newOrder)
-            Status.DELETED -> adapterDeleted.submitList(adapterDeleted.currentList + newOrder)
-        }
-    }
-
     private fun filterOrders() {
         val status = tabs.selectedTabPosition
         val selectedStatus = Status.entries[status]
