@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.grytsyna.fixitpro.common.LogWrapper
 import com.grytsyna.fixitpro.db.DatabaseHelper
 import com.grytsyna.fixitpro.entity.Order
-import java.util.Date
 import java.util.concurrent.Executors
 
 class OrderViewModel : ViewModel() {
@@ -15,9 +14,6 @@ class OrderViewModel : ViewModel() {
     private val currentTabPosition: MutableLiveData<Int> = MutableLiveData()
     private var databaseHelper: DatabaseHelper? = null
     private val executorService = Executors.newSingleThreadExecutor()
-
-    private var fromDate: Date? = null
-    private var toDate: Date? = null
 
     init {
         orders.postValue(ArrayList())
@@ -36,39 +32,17 @@ class OrderViewModel : ViewModel() {
         currentTabPosition.postValue(position)
     }
 
-    fun setDates(from: Date, to: Date) {
-        fromDate = from
-        toDate = to
-        loadOrdersFromDatabase()
-    }
-
-    fun updateOrder(order: Order) {
+    fun updateOrder(order: Order, onOrderUpdated: (Order?) -> Unit) {
         if (databaseHelper == null) {
             throw IllegalStateException("DatabaseHelper is not initialized")
         }
         executorService.execute {
             try {
                 databaseHelper!!.updateOrder(order)
-                loadOrdersFromDatabase()
+                onOrderUpdated(order)
             } catch (t: Throwable) {
+                onOrderUpdated(null)
                 LogWrapper.e("OrderViewModel: updateOrder", t.message ?: "Unknown error", t)
-            }
-        }
-    }
-
-    fun loadOrdersFromDatabase() {
-        if (databaseHelper != null) {
-            executorService.execute {
-                try {
-                    val orderList = if (fromDate != null && toDate != null) {
-                        databaseHelper!!.getRangeOrders(fromDate ?: Date(), toDate ?: Date())
-                    } else {
-                        databaseHelper!!.getAllOrders()
-                    }
-                    orders.postValue(orderList)
-                } catch (t: Throwable) {
-                    LogWrapper.e("OrderViewModel: loadOrdersFromDatabase", t.message ?: "Unknown error", t)
-                }
             }
         }
     }

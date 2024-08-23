@@ -5,14 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
 import com.grytsyna.fixitpro.common.LogWrapper
-import com.grytsyna.fixitpro.activity.main.order.OrderViewModel
 import com.grytsyna.fixitpro.db.DatabaseHelper
 import com.grytsyna.fixitpro.entity.Order
 import com.grytsyna.fixitpro.enum_status.Status
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Date
 
 class SmsReceiver : BroadcastReceiver() {
@@ -46,11 +44,7 @@ class SmsReceiver : BroadcastReceiver() {
     private fun processOrderInBackground(context: Context, order: Order) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val dbHelper = DatabaseHelper.getInstance(context)
-                val viewModel = OrderViewModel.getInstance()
-                viewModel.setDatabaseHelper(dbHelper)
-
-                processOrder(dbHelper, viewModel, order)
+                processOrder(DatabaseHelper.getInstance(context), order)
             } catch (t: Throwable) {
                 LogWrapper.e("SmsReceiver: processOrderInBackground", t.message ?: "Unknown error", t)
             }
@@ -58,7 +52,7 @@ class SmsReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        suspend fun processOrder(dbHelper: DatabaseHelper, viewModel: OrderViewModel, order: Order) {
+        fun processOrder(dbHelper: DatabaseHelper, order: Order) {
             try {
                 synchronized(dbHelper) {
                     val existOrder = dbHelper.getOrderById(order.id)
@@ -68,7 +62,8 @@ class SmsReceiver : BroadcastReceiver() {
                         }
 
                         if (order.receivedDate.after(existOrder.receivedDate)) {
-                            val builder = existOrder.toBuilder()
+                            val updatedOrder = existOrder.toBuilder()
+                                .status(order.status)
                                 .date(order.date)
                                 .receivedDate(order.receivedDate)
                                 .note(order.note)
@@ -77,21 +72,13 @@ class SmsReceiver : BroadcastReceiver() {
                                 .tel(order.tel)
                                 .surplus(order.surplus)
                                 .serviceFee(order.serviceFee)
+                                .build()
 
-                            if (existOrder.status == Status.NEW) {
-                                builder.status(order.status)
-                            }
-
-                            val finalOrder = builder.build()
-                            dbHelper.updateParsedOrder(finalOrder)
+                            dbHelper.updateParsedOrder(updatedOrder)
                         }
                     } else {
                         dbHelper.addOrder(order)
                     }
-                }
-
-                withContext(Dispatchers.Main) {
-                    viewModel.loadOrdersFromDatabase()
                 }
             } catch (t: Throwable) {
                 LogWrapper.e("SmsReceiver: processOrder", t.message ?: "Unknown error", t)

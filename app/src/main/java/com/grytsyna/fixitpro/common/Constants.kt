@@ -29,6 +29,7 @@ object Constants {
     const val REQUEST_CODE_OPEN_FILE = 2
     const val REQUEST_CODE_IMPORT_DATA = 3
     const val REQUEST_CODE_PERMISSIONS = 101
+    const val REQUEST_CODE_EDIT_ORDER = 1001
 
     const val EXTRA_TEL = "tel:"
     const val EXTRA_GEO = "geo:0,0?q="

@@ -14,12 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.grytsyna.fixitpro.activity.edit.EditOrderActivity
+import com.grytsyna.fixitpro.activity.main.OnOrdersLoadedListener
 import com.grytsyna.fixitpro.activity.main.PermissionManager
 import com.grytsyna.fixitpro.activity.main.order.OrderAdapter
 import com.grytsyna.fixitpro.activity.main.order.OrderViewModel
 import com.grytsyna.fixitpro.activity.search.SearchActivity
 import com.grytsyna.fixitpro.common.Constants
 import com.grytsyna.fixitpro.common.Constants.DATE_FORMATTER
+import com.grytsyna.fixitpro.common.Constants.EXTRA_ORDER
 import com.grytsyna.fixitpro.common.DateUtils
 import com.grytsyna.fixitpro.common.LogWrapper
 import com.grytsyna.fixitpro.db.DatabaseHelper
@@ -30,7 +32,7 @@ import com.grytsyna.fixitpro.receiver.MyApplication
 import java.time.ZoneId
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
 
     private lateinit var viewModel: OrderViewModel
     private lateinit var recyclerViewNew: RecyclerView
@@ -50,14 +52,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var spinnerFilter: Spinner
     private lateinit var databaseHelper: DatabaseHelper
     private lateinit var permissionManager: PermissionManager
-    private lateinit var fromDate: Date
-    private lateinit var toDate: Date
 
     private var allOrders: MutableList<Order> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        (application as MyApplication).setOrdersLoadedListener(this)
 
         setupPermissions()
 
@@ -78,9 +80,36 @@ class MainActivity : AppCompatActivity() {
         initObservers()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        (application as MyApplication).removeOrdersLoadedListener()
+    }
+
+    override fun onOrdersLoaded(orders: List<Order>) {
+        allOrders.clear()
+        allOrders.addAll(orders)
+        updateOrderLists(allOrders)
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         permissionManager.handlePermissionsResult(requestCode, grantResults)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Constants.REQUEST_CODE_EDIT_ORDER && resultCode == RESULT_OK && data != null) {
+            val updatedOrder: Order? = data?.getParcelableExtra(EXTRA_ORDER, Order::class.java)
+            if (updatedOrder != null) {
+                val position = allOrders.indexOfFirst { it.id == updatedOrder.id }
+                if (position != -1) {
+                    allOrders[position] = updatedOrder
+                } else {
+                    allOrders.add(updatedOrder)
+                }
+                updateOrderLists(allOrders)
+            }
+        }
     }
 
     private fun setupPermissions() {
@@ -179,9 +208,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                fromDate = DateUtils.getStartDateOrToday(etFromDate)
-                toDate = DateUtils.getEndDateOrToday(etToDate)
-                viewModel.setDates(fromDate, toDate)
                 filterOrders()
             }
 
@@ -192,9 +218,6 @@ class MainActivity : AppCompatActivity() {
     private fun setupDefaultFilters() {
         spinnerFilter.setSelection(1)
         setDatesToTomorrow()
-        fromDate = DateUtils.getStartDateOrToday(etFromDate)
-        toDate = DateUtils.getEndDateOrToday(etToDate)
-        viewModel.setDates(fromDate, toDate)
     }
 
     private fun initObservers() {
@@ -268,10 +291,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateOrderStatus(order: Order, newStatus: Status) {
         val updatedOrder = order.copy(status = newStatus)
-        viewModel.setDates(fromDate, toDate)
-        viewModel.updateOrder(updatedOrder)
-
-        updateAdaptersForStatusChange(order, updatedOrder)
+        viewModel.updateOrder(updatedOrder) { result ->
+            runOnUiThread {
+                if (result != null) {
+                    val position = allOrders.indexOfFirst { it.id == result.id }
+                    if (position != -1) {
+                        allOrders[position] = result
+                    } else {
+                        allOrders.add(result)
+                    }
+                    updateOrderLists(allOrders)
+                } else {
+                    Toast.makeText(this, getString(R.string.order_saving_error_toast), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun showAddCommentDialog(order: Order) {
@@ -300,18 +334,31 @@ class MainActivity : AppCompatActivity() {
                     val updatedOrder = order.copy(
                         comment = comment,
                         serviceFee = serviceFee,
-                        partsFee = partsFee,
-                        status = Status.COMPLETED
+                        partsFee = partsFee
                     )
 
-                    viewModel.setDates(fromDate, toDate)
-                    viewModel.updateOrder(updatedOrder)
-                    dialog.dismiss()
-
-                    val position = allOrders.indexOf(order)
-                    if (position != -1) {
-                        allOrders[position] = updatedOrder
-                        updateOrderLists(allOrders)
+                    viewModel.updateOrder(updatedOrder) { result ->
+                        runOnUiThread {
+                            if (result != null) {
+                                val finalUpdatedOrder = result.copy(status = Status.COMPLETED)
+                                viewModel.updateOrder(finalUpdatedOrder) { finalResult ->
+                                    runOnUiThread {
+                                        if (finalResult != null) {
+                                            val position = allOrders.indexOfFirst { it.id == order.id }
+                                            if (position != -1) {
+                                                allOrders[position] = finalUpdatedOrder
+                                                updateOrderLists(allOrders)
+                                            }
+                                            dialog.dismiss()
+                                        } else {
+                                            Toast.makeText(this, getString(R.string.order_saving_error_toast), Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(this, getString(R.string.order_saving_error_toast), Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                 } else {
                     editComment.error = getString(R.string.comment_required_text)
@@ -370,9 +417,8 @@ class MainActivity : AppCompatActivity() {
     private fun filterOrders() {
         val status = tabs.selectedTabPosition
         val selectedStatus = Status.entries[status]
-        fromDate = DateUtils.getStartDateOrToday(etFromDate)
-        toDate = DateUtils.getEndDateOrToday(etToDate)
-        viewModel.setDates(fromDate, toDate)
+        val fromDate = DateUtils.getStartDateOrToday(etFromDate)
+        val toDate = DateUtils.getEndDateOrToday(etToDate)
 
         val filteredOrders = allOrders.filter { order ->
             order.status == selectedStatus && order.date >= fromDate && order.date <= toDate
@@ -479,6 +525,6 @@ class MainActivity : AppCompatActivity() {
     private fun editOrder(order: Order) {
         val intent = Intent(this, EditOrderActivity::class.java)
         intent.putExtra(Constants.EXTRA_ORDER, order)
-        startActivity(intent)
+        startActivityForResult(intent, Constants.REQUEST_CODE_EDIT_ORDER)
     }
 }

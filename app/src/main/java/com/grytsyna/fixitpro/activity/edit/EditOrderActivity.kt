@@ -97,8 +97,19 @@ class EditOrderActivity : AppCompatActivity() {
                     .partsFee(binding.etPartsFee.text.toString().trim().toDoubleOrNull() ?: 0.0)
                     .build()
 
-                viewModel.updateOrder(order)
-                onBackPressedDispatcher.onBackPressed()
+                viewModel.updateOrder(order) { result ->
+                    runOnUiThread {
+                        if (result != null) {
+                            val resultIntent = Intent()
+                            resultIntent.putExtra(EXTRA_ORDER, order)
+                            setResult(RESULT_OK, resultIntent)
+
+                            finish()
+                        } else {
+                            Toast.makeText(this, getString(R.string.order_saving_error_toast), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             } else {
                 enableEditing(true)
             }

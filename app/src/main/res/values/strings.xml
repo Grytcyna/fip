@@ -99,5 +99,6 @@
     <string name="import_successfully_toast">Data imported successfully</string>
     <string name="import_error_toast">Data import error: %1$s</string>
     <string name="calculator_not_found_toast">Calculator app not found</string>
+    <string name="order_saving_error_toast">Order saving error</string>
 
 </resources>

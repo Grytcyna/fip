@@ -4,10 +4,10 @@ import android.app.Application
 import android.content.ContentResolver
 import android.net.Uri
 import android.provider.Telephony
+import com.grytsyna.fixitpro.activity.main.OnOrdersLoadedListener
 import com.grytsyna.fixitpro.common.LogWrapper
-import com.grytsyna.fixitpro.activity.main.order.OrderViewModel
+import com.grytsyna.fixitpro.common.DateUtils
 import com.grytsyna.fixitpro.db.DatabaseHelper
-import com.grytsyna.fixitpro.entity.Order
 import kotlinx.coroutines.*
 import java.util.Date
 
@@ -17,8 +17,19 @@ class MyApplication : Application(), CoroutineScope {
 
     override val coroutineContext = Dispatchers.Main + job
 
+    private var ordersLoadedListener: OnOrdersLoadedListener? = null
+
+    fun setOrdersLoadedListener(listener: OnOrdersLoadedListener) {
+        ordersLoadedListener = listener
+    }
+
+    fun removeOrdersLoadedListener() {
+        ordersLoadedListener = null
+    }
+
     fun readSmsFromArchive() {
         try {
+            val dbHelper = DatabaseHelper.getInstance(this@MyApplication)
             val contentResolver: ContentResolver = contentResolver
             val smsUri: Uri = Telephony.Sms.Inbox.CONTENT_URI
             val projection = arrayOf(
@@ -29,7 +40,6 @@ class MyApplication : Application(), CoroutineScope {
             )
 
             launch(Dispatchers.IO) {
-                val orders = mutableListOf<Order>()
                 contentResolver.query(
                     smsUri,
                     projection,
@@ -48,24 +58,17 @@ class MyApplication : Application(), CoroutineScope {
                             val newOrder = order.toBuilder()
                                 .receivedDate(Date(date))
                                 .build()
-                            orders.add(newOrder)
+
+                            SmsReceiver.processOrder(dbHelper, newOrder)
                         }
                     }
                 }
 
-                if (orders.isNotEmpty()) {
-                    val dbHelper = DatabaseHelper.getInstance(this@MyApplication)
-                    val viewModel = OrderViewModel.getInstance().apply {
-                        setDatabaseHelper(dbHelper)
-                    }
-
-                    orders.forEach { order ->
-                        SmsReceiver.processOrder(dbHelper, viewModel, order)
-                    }
-
-                    withContext(Dispatchers.Main) {
-                        viewModel.loadOrdersFromDatabase()
-                    }
+                withContext(Dispatchers.Main) {
+                    ordersLoadedListener?.onOrdersLoaded(dbHelper.getRangeOrders(
+                        DateUtils.getFirstDayOfCurrentMonth(),
+                        DateUtils.getEighthDayOfNextMonth())
+                    )
                 }
             }
         } catch (t: Throwable) {

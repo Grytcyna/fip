@@ -38,4 +38,42 @@ object DateUtils {
         }
         return calendar.time
     }
+
+    fun getStartDateOrToday(calendar: Calendar): Date {
+        return getDateOrToday(calendar, true)
+    }
+
+    fun getEndDateOrToday(calendar: Calendar): Date {
+        return getDateOrToday(calendar, false)
+    }
+
+    private fun getDateOrToday(calendar: Calendar, isStartOfDay: Boolean): Date {
+        if (isStartOfDay) {
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 1)
+        } else {
+            calendar.set(Calendar.HOUR_OF_DAY, 23)
+            calendar.set(Calendar.MINUTE, 59)
+            calendar.set(Calendar.SECOND, 59)
+            calendar.set(Calendar.MILLISECOND, 999)
+        }
+        return calendar.time
+    }
+
+    fun getFirstDayOfCurrentMonth(): Date {
+        val calendar = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_MONTH, 1)
+        }
+        return getStartDateOrToday(calendar)
+    }
+
+    fun getEighthDayOfNextMonth(): Date {
+        val calendar = Calendar.getInstance().apply {
+            add(Calendar.MONTH, 1)
+            set(Calendar.DAY_OF_MONTH, 8)
+        }
+        return getEndDateOrToday(calendar)
+    }
 }
