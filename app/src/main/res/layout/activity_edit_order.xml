@@ -103,16 +103,19 @@
                 app:endIconMode="custom"
                 app:endIconDrawable="@drawable/ic_copy"
                 app:endIconContentDescription="@string/address_description"
-                android:layout_marginBottom="8dp" >
+                android:layout_marginBottom="8dp">
 
                 <EditText
                     android:id="@+id/etAddress"
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="wrap_content"
+                    android:minLines="1"
+                    android:maxLines="5"
+                    android:scrollbars="vertical"
+                    android:inputType="textMultiLine"
                     android:autofillHints="postalAddress"
                     android:clickable="true"
-                    android:focusable="false"
-                    android:inputType="text" />
+                    android:focusable="false" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageButton
