@@ -426,12 +426,22 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
         viewModel.updateOrder(updatedOrder) { result ->
             runOnUiThread {
                 if (result != null) {
-                    val position = allOrders.indexOfFirst { it.id == result.id }
+                    val position = allOrders.indexOfFirst { it.id == updatedOrder.id }
                     if (position != -1) {
-                        allOrders[position] = result
+                        allOrders[position] = updatedOrder
                     } else {
-                        allOrders.add(result)
+                        allOrders.add(updatedOrder)
                     }
+
+                    if (tempOrders.isNotEmpty()) {
+                        val tempPosition = tempOrders.indexOfFirst { it.id == updatedOrder.id }
+                        if (tempPosition != -1) {
+                            tempOrders[tempPosition] = updatedOrder
+                        } else {
+                            tempOrders.add(updatedOrder)
+                        }
+                    }
+
                     updateOrderLists(allOrders)
                     filterOrders()
                 } else {
@@ -477,12 +487,22 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
                                 viewModel.updateOrder(finalUpdatedOrder) { finalResult ->
                                     runOnUiThread {
                                         if (finalResult != null) {
-                                            val position = allOrders.indexOfFirst { it.id == order.id }
+                                            val position = allOrders.indexOfFirst { it.id == finalUpdatedOrder.id }
                                             if (position != -1) {
                                                 allOrders[position] = finalUpdatedOrder
                                                 updateOrderLists(allOrders)
                                                 filterOrders()
                                             }
+
+                                            if (tempOrders.isNotEmpty()) {
+                                                val tempPosition = tempOrders.indexOfFirst { it.id == finalUpdatedOrder.id }
+                                                if (tempPosition != -1) {
+                                                    tempOrders[tempPosition] = finalUpdatedOrder
+                                                    updateOrderLists(allOrders)
+                                                    filterOrders()
+                                                }
+                                            }
+
                                             dialog.dismiss()
                                         } else {
                                             Toast.makeText(this, getString(R.string.order_saving_error_toast), Toast.LENGTH_SHORT).show()
@@ -595,7 +615,7 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
 
     private fun setDatesToThisWeek() {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
         val startOfWeek = calendar.time
         calendar.add(Calendar.DAY_OF_WEEK, 6)
         val endOfWeek = calendar.time
