@@ -170,7 +170,17 @@ class EditOrderActivity : AppCompatActivity() {
 
     private fun parseDate(dateString: String): Date {
         return try {
-            DATE_FORMATTER.parse(dateString) ?: throw IllegalArgumentException("Invalid date format")
+            val parsedDate = DATE_FORMATTER.parse(dateString) ?: throw IllegalArgumentException("Invalid date format")
+
+            val calendar = Calendar.getInstance().apply {
+                time = parsedDate
+                set(Calendar.HOUR_OF_DAY, 12)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+
+            calendar.time
         } catch (e: Exception) {
             LogWrapper.e("DatabaseHelper", "Error parsing date: ${e.message}", e)
             Date()
