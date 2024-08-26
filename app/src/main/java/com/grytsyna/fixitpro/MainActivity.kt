@@ -111,26 +111,34 @@ class MainActivity : AppCompatActivity(), OnOrdersLoadedListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constants.REQUEST_CODE_EDIT_ORDER && resultCode == RESULT_OK && data != null) {
-            val updatedOrder: Order? = data?.getParcelableExtra(EXTRA_ORDER, Order::class.java)
+            val updatedOrder: Order? = data.getParcelableExtra(EXTRA_ORDER, Order::class.java)
             if (updatedOrder != null) {
-                val position = allOrders.indexOfFirst { it.id == updatedOrder.id }
-                if (position != -1) {
-                    allOrders[position] = updatedOrder
-                } else {
-                    allOrders.add(updatedOrder)
-                }
+                viewModel.updateOrder(updatedOrder) { result ->
+                    runOnUiThread {
+                        if (result != null) {
+                            val position = allOrders.indexOfFirst { it.id == updatedOrder.id }
+                            if (position != -1) {
+                                allOrders[position] = updatedOrder
+                            } else {
+                                allOrders.add(updatedOrder)
+                            }
 
-                if (tempOrders.isNotEmpty()) {
-                    val tempPosition = tempOrders.indexOfFirst { it.id == updatedOrder.id }
-                    if (tempPosition != -1) {
-                        tempOrders[tempPosition] = updatedOrder
-                    } else {
-                        tempOrders.add(updatedOrder)
+                            if (tempOrders.isNotEmpty()) {
+                                val tempPosition = tempOrders.indexOfFirst { it.id == updatedOrder.id }
+                                if (tempPosition != -1) {
+                                    tempOrders[tempPosition] = updatedOrder
+                                } else {
+                                    tempOrders.add(updatedOrder)
+                                }
+                            }
+
+                            updateOrderLists(allOrders)
+                            filterOrders()
+                        } else {
+                            Toast.makeText(this, getString(R.string.order_saving_error_toast), Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
-
-                updateOrderLists(allOrders)
-                filterOrders()
             }
         }
     }

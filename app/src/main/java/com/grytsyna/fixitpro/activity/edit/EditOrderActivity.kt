@@ -13,20 +13,17 @@ import com.grytsyna.fixitpro.common.Constants.DATE_FORMATTER
 import com.grytsyna.fixitpro.common.LogWrapper
 import com.grytsyna.fixitpro.entity.Order
 import com.grytsyna.fixitpro.R
-import com.grytsyna.fixitpro.activity.main.order.OrderViewModel
 import com.grytsyna.fixitpro.common.Constants.EMPTY
 import com.grytsyna.fixitpro.common.Constants.EXTRA_GEO
 import com.grytsyna.fixitpro.common.Constants.EXTRA_ORDER
 import com.grytsyna.fixitpro.common.Constants.EXTRA_TEL
 import com.grytsyna.fixitpro.databinding.ActivityEditOrderBinding
-import com.grytsyna.fixitpro.db.DatabaseHelper
 import com.grytsyna.fixitpro.enum_status.Status
 import java.util.Calendar
 import java.util.Date
 
 class EditOrderActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: OrderViewModel
     private lateinit var order: Order
     private var isEditing = false
     private lateinit var binding: ActivityEditOrderBinding
@@ -35,10 +32,6 @@ class EditOrderActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityEditOrderBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        viewModel = OrderViewModel.getInstance().apply {
-            setDatabaseHelper(DatabaseHelper.getInstance(this@EditOrderActivity))
-        }
 
         order = intent.getParcelableExtra(EXTRA_ORDER, Order::class.java)
             ?: throw IllegalArgumentException("Order is missing")
@@ -97,19 +90,11 @@ class EditOrderActivity : AppCompatActivity() {
                     .partsFee(binding.etPartsFee.text.toString().trim().toDoubleOrNull() ?: 0.0)
                     .build()
 
-                viewModel.updateOrder(order) { result ->
-                    runOnUiThread {
-                        if (result != null) {
-                            val resultIntent = Intent()
-                            resultIntent.putExtra(EXTRA_ORDER, order)
-                            setResult(RESULT_OK, resultIntent)
+                val resultIntent = Intent()
+                resultIntent.putExtra(EXTRA_ORDER, order)
+                setResult(RESULT_OK, resultIntent)
 
-                            finish()
-                        } else {
-                            Toast.makeText(this, getString(R.string.order_saving_error_toast), Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
+                finish()
             } else {
                 enableEditing(true)
             }
